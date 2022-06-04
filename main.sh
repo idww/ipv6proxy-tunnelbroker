@@ -232,6 +232,14 @@ HOST_IPV4_ADDR=$(hostname -I | awk '{print $1}')
 echo "● Selected: Host IPv4 address=$HOST_IPV4_ADDR"
 
 ####
+echo "======CONFIGURE VAR FILES======"
+echo $PROXY_NETWORK > v_network.txt
+echo $PROXY_COUNT > v_count.txt
+echo $PROXY_NET_MASK > v_netmask.txt
+echo $PROXY_AUTHORISATION > v_authmode.txt
+echo $PROXY_AUTH_IP > v_authip.txt
+
+####
 echo "======INSTALL NDPPD======"
 echo "● Setting up ndppd"
 cd ~
@@ -283,14 +291,6 @@ for e in $(cat ~/ip.list); do
     echo "$PROXY_PROTOCOL://$HOST_IPV4_ADDR:$CURRENT_PROXY_PORT$([ "$PROXY_LOGIN" ] && echo ":$PROXY_LOGIN:$PROXY_PASS" || echo "")" >>~/tunnels.txt
     let "CURRENT_PROXY_PORT+=1"
 done
-
-####
-echo "======CONFIGURE VAR FILES======"
-echo $PROXY_NETWORK > v_network.txt
-echo $PROXY_COUNT > v_count.txt
-echo $PROXY_NET_MASK > v_netmask.txt
-echo $PROXY_AUTHORISATION > v_authmode.txt
-echo $PROXY_AUTH_IP > v_authip.txt
 
 ####
 echo "======CONFIGURE AUTORUN======"
