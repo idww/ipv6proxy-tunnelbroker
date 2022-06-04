@@ -13,7 +13,7 @@ echo "● Updating packages and installing dependencies"
 apt-get update
 apt-get -y install gcc g++ make bc pwgen git
 
-sleep 3
+sleep 2
 
 ####
 echo "======TUNING SYSCTL======"
