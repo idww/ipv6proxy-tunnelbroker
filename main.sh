@@ -7,12 +7,14 @@ else
     exit 1
 fi
 
-#### Update system
+####
+echo "======UPDATE SYS PACKAGES======"
 echo "● Updating packages and installing dependencies"
 apt-get update
 apt-get -y install gcc g++ make bc pwgen git
 
-#### Tuning sysctl
+####
+echo "======TUNING SYSCTL======"
 echo "● Setting up /etc/sysctl.conf"
 cat >>/etc/sysctl.conf <<END
 net.ipv6.conf.eth0.proxy_ndp=1
@@ -30,18 +32,21 @@ vm.max_map_count=6000000
 kernel.pid_max=2000000
 END
 
-#### Tuning
+####
+echo "======TUNING logind======"
 echo "● Setting up /etc/systemd/logind.conf"
 echo "UserTasksMax=1000000" >>/etc/systemd/logind.conf
 
-#### Tuning file limits
+####
+echo "======TUNING FILELIMITS======"
 echo '* hard nofile 999999' >> /etc/security/limits.conf
 echo '* soft nofile 999999' >> /etc/security/limits.conf
 echo 'root hard nofile 1048576' >> /etc/security/limits.conf
 echo 'root soft nofile 1048576' >> /etc/security/limits.conf
 
 
-#### Tuning
+####
+echo "======TUNING SYSTEM.CONF======"
 echo "● Setting up /etc/systemd/system.conf"
 cat >>/etc/systemd/system.conf <<END
 UserTasksMax=1000000
@@ -51,7 +56,8 @@ DefaultTasksMax=1000000
 UserTasksMax=1000000
 END
 
-#### Install 3proxy
+####
+echo "======SETTING UP #PROXY====="
 echo "● Setting up 3proxy"
 cd ~
 git clone https://github.com/z3APA3A/3proxy.git
@@ -61,7 +67,7 @@ echo "#define ANONYMOUS 1" > ~/3proxy/src/define.txt
 make -f Makefile.Linux
 
 ####
-echo "======SETTINGS======"
+echo "======CONFIGURE IPv6 PREFIX======"
 echo "↓ Routed IPv6 Prefix (*:*:*::/*): (enter full prefix eg: 2001:470:7ac7::/48 or 2001:470:1f15:3c4::/64)"
 read PROXY_NETWORK
 
@@ -76,7 +82,8 @@ fi
 echo "● Selected: $PROXY_NETWORK"
 
 ####
-echo "↓ IPv4 endpoint of your Tunnel Server: (get it in tunnelbroker Server IPv4 Address:"
+echo "======CONFIGURE BROKER ENDPOINT======"
+echo "↓ IPv4 endpoint of your Tunnel Server: (see in tunnelbroker tunnel conf"
 read TUNNEL_IPV4_ADDR
 if [[ ! "$TUNNEL_IPV4_ADDR" ]]; then
     echo "IPv4 endpoint can't be emty"
@@ -84,7 +91,8 @@ if [[ ! "$TUNNEL_IPV4_ADDR" ]]; then
 fi
 echo "● Selected: $TUNNEL_IPV4_ADDR"
 
-#### Authorization method
+####
+echo "======CHOOSE AUTHORIZATION METHOD======"
 echo "↓ Proxies authorisation mode 0 or 1 or 2 : (0 = log;pass / 1 = ip / 2 = no auth)"
 read PROXY_AUTHORISATION
 
@@ -100,7 +108,8 @@ else
 fi
 echo "● Selected auth method: $PROXY_AUTHORISATION"
 
-#### Generate log;pass
+####
+echo "======CONFIGURE PROXY LOGIN:PASS======"
 gen_logpass() {
 echo "↓ Set proxies login & password:"
 read PROXY_LOGIN
@@ -119,7 +128,8 @@ fi
 }
 #gen_logpass
 
-#### Generate ip
+####
+echo "======SETTINGS UP YOU AUTHORIZED IPs======"
 gen_auth_ip() {
 echo "↓ Enter your authorized ip (eg: 1.2.3.4.5):"
 read PROXY_AUTH_IP
@@ -133,6 +143,8 @@ fi
 }
 #gen_auth_ip
 
+####
+echo "======SETTINGS UP 3PROXY CONFIG======"
 gen_conf() {
 echo "↓ Writing main 3proxy config"
 cat >~/3proxy/3proxy.cfg <<END
@@ -155,7 +167,8 @@ END
 gen_conf
 
 #### Select authorization method
-echo "↓ Configuring proxy authorisation"
+echo "======SETTINGS UP PROXY AUTHORIZATION======"
+echo "↓ Configuring proxy authorization"
 if [[ $PROXY_AUTHORISATION == *"0"* ]]; then
     gen_logpass
     cat >>~/3proxy/3proxy.cfg <<END
@@ -181,10 +194,10 @@ else
     exit 1
 fi
 #echo "● Selected: $PROXY_AUTHORISATION"
-####
 
 
 ####
+echo "======SET PROXY PORT NUMBER======"
 echo "↓ Port numbering start (default 30000):"
 read PROXY_START_PORT
 if [[ ! "$PROXY_START_PORT" ]]; then
@@ -193,6 +206,7 @@ fi
 echo "● Selected: $PROXY_START_PORT"
 
 ####
+echo "======SET PROXY COUNT======"
 echo "↓ Proxies count (default 1):"
 read PROXY_COUNT
 if [[ ! "$PROXY_COUNT" ]]; then
@@ -201,6 +215,7 @@ fi
 echo "● Selected: $PROXY_COUNT"
 
 ####
+echo "======CONFIGURE PROXY PROTOCOL======"
 echo "↓ Proxies protocol (http, socks5; default http):"
 read PROXY_PROTOCOL
 if [[ PROXY_PROTOCOL != "socks5" ]]; then
@@ -209,13 +224,15 @@ fi
 echo "● Selected: $PROXY_PROTOCOL"
 
 ####
+echo "======GET SERVER IP && CONFIGURE NET======"
 PROXY_NETWORK=$(echo $PROXY_NETWORK | awk -F:: '{print $1}')
 echo "● Selected: Network=$PROXY_NETWORK"
 echo "● Selected: Network Mask=$PROXY_NET_MASK"
 HOST_IPV4_ADDR=$(hostname -I | awk '{print $1}')
 echo "● Selected: Host IPv4 address=$HOST_IPV4_ADDR"
 
-#### Install ndppd
+####
+echo "======INSTALL NDPPD======"
 echo "● Setting up ndppd"
 cd ~
 git clone https://github.com/DanielAdolfsson/ndppd.git
@@ -235,6 +252,7 @@ proxy he-ipv6 {
 END
 
 ####
+echo "======CONFIGURE && GEN PROXY======"
 echo "● Generating $PROXY_COUNT IPv6 addresses"
 touch ~/ip.list
 touch ~/tunnels.txt
@@ -266,14 +284,16 @@ for e in $(cat ~/ip.list); do
     let "CURRENT_PROXY_PORT+=1"
 done
 
-#### Write NET prefix & ip count  to files
+####
+echo "======CONFIGURE VAR FILES======"
 echo $PROXY_NETWORK > v_network.txt
 echo $PROXY_COUNT > v_count.txt
 echo $PROXY_NET_MASK > v_netmask.txt
 echo $PROXY_AUTHORISATION > v_authmode.txt
 echo $PROXY_AUTH_IP > v_authip.txt
 
-####  Configure autorun
+####
+echo "======CONFIGURE AUTORUN======"
 echo "● Setting up /etc/rc.local"
 cat >/etc/rc.local <<END
 #!/bin/bash
@@ -299,5 +319,6 @@ END
 /bin/chmod +x /etc/rc.local
 
 ####
+echo "======REBOOT======"
 echo "● Finishing and rebooting"
 reboot now
