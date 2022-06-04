@@ -61,6 +61,7 @@ echo "#define ANONYMOUS 1" > ~/3proxy/src/define.txt
 make -f Makefile.Linux
 
 ####
+echo "======SETTINGS======"
 echo "↓ Routed IPv6 Prefix (*:*:*::/*): (enter full prefix eg: 2001:470:7ac7::/48 or 2001:470:1f15:3c4::/64)"
 read PROXY_NETWORK
 
