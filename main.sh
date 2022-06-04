@@ -82,6 +82,26 @@ fi
 echo "● Selected: $PROXY_NETWORK"
 
 ####
+echo "======INSTALL NDPPD======"
+echo "● Setting up ndppd"
+cd ~
+git clone https://github.com/DanielAdolfsson/ndppd.git
+cd ~/ndppd
+make all
+make install
+cat >~/ndppd/ndppd.conf <<END
+route-ttl 30000
+proxy he-ipv6 {
+   router no
+   timeout 500
+   ttl 30000
+   rule ${PROXY_NETWORK}::/${PROXY_NET_MASK} {
+      static
+   }
+}
+END
+
+####
 echo "======CONFIGURE BROKER ENDPOINT======"
 echo "↓ IPv4 endpoint of your Tunnel Server: (see in tunnelbroker tunnel conf"
 read TUNNEL_IPV4_ADDR
@@ -240,26 +260,6 @@ echo $PROXY_AUTHORISATION > v_authmode.txt
 echo $PROXY_AUTH_IP > v_authip.txt
 
 ####
-echo "======INSTALL NDPPD======"
-echo "● Setting up ndppd"
-cd ~
-git clone https://github.com/DanielAdolfsson/ndppd.git
-cd ~/ndppd
-make all
-make install
-cat >~/ndppd/ndppd.conf <<END
-route-ttl 30000
-proxy he-ipv6 {
-   router no
-   timeout 500
-   ttl 30000
-   rule ${PROXY_NETWORK}::/${PROXY_NET_MASK} {
-      static
-   }
-}
-END
-
-####
 echo "======CONFIGURE && GEN PROXY======"
 echo "● Generating $PROXY_COUNT IPv6 addresses"
 touch ~/ip.list
@@ -321,4 +321,5 @@ END
 ####
 echo "======REBOOT======"
 echo "● Finishing and rebooting"
-reboot now
+#reboot now
+reboot
