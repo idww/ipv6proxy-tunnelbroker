@@ -34,14 +34,14 @@ vm.max_map_count=6000000
 kernel.pid_max=2000000
 END
 
-sleep 3
+sleep 1
 
 ####
 echo "======TUNING logind======"
 echo "● Setting up /etc/systemd/logind.conf"
 echo "UserTasksMax=1000000" >>/etc/systemd/logind.conf
 
-sleep 3
+sleep 2
 
 ####
 echo "======TUNING FILELIMITS======"
@@ -50,7 +50,7 @@ echo '* soft nofile 999999' >> /etc/security/limits.conf
 echo 'root hard nofile 1048576' >> /etc/security/limits.conf
 echo 'root soft nofile 1048576' >> /etc/security/limits.conf
 
-sleep 3
+sleep 2
 
 ####
 echo "======TUNING SYSTEM.CONF======"
@@ -63,7 +63,7 @@ DefaultTasksMax=1000000
 UserTasksMax=1000000
 END
 
-sleep 3
+sleep 2
 
 ####
 echo "======SETTING UP #PROXY====="
@@ -75,7 +75,7 @@ touch ~/3proxy/src/define.txt
 echo "#define ANONYMOUS 1" > ~/3proxy/src/define.txt
 make -f Makefile.Linux
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE IPv6 PREFIX======"
@@ -92,7 +92,7 @@ else
 fi
 echo "● Selected: $PROXY_NETWORK"
 
-sleep 3
+sleep 1
 
 ####
 echo "======INSTALL NDPPD======"
@@ -114,7 +114,7 @@ proxy he-ipv6 {
 }
 END
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE BROKER ENDPOINT======"
@@ -126,7 +126,7 @@ if [[ ! "$TUNNEL_IPV4_ADDR" ]]; then
 fi
 echo "● Selected: $TUNNEL_IPV4_ADDR"
 
-sleep 3
+sleep 1
 
 ####
 echo "======CHOOSE AUTHORIZATION METHOD======"
@@ -145,7 +145,7 @@ else
 fi
 echo "● Selected auth method: $PROXY_AUTHORISATION"
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE PROXY LOGIN:PASS======"
@@ -167,7 +167,7 @@ fi
 }
 #gen_logpass
 
-sleep 3
+sleep 1
 
 ####
 echo "======SETTINGS UP YOU AUTHORIZED IPs======"
@@ -184,7 +184,7 @@ fi
 }
 #gen_auth_ip
 
-sleep 3
+sleep 1
 
 ####
 echo "======SETTINGS UP 3PROXY CONFIG======"
@@ -209,7 +209,7 @@ END
 
 gen_conf
 
-sleep 3
+sleep 1
 
 #### Select authorization method
 echo "======SETTINGS UP PROXY AUTHORIZATION======"
@@ -240,7 +240,7 @@ else
 fi
 #echo "● Selected: $PROXY_AUTHORISATION"
 
-sleep 3
+sleep 1
 
 ####
 echo "======SET PROXY PORT NUMBER======"
@@ -262,7 +262,7 @@ if [[ ! "$PROXY_COUNT" ]]; then
 fi
 echo "● Selected: $PROXY_COUNT"
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE PROXY PROTOCOL======"
@@ -273,7 +273,7 @@ if [[ PROXY_PROTOCOL != "socks5" ]]; then
 fi
 echo "● Selected: $PROXY_PROTOCOL"
 
-sleep 3
+sleep 1
 
 ####
 echo "======GET SERVER IP && CONFIGURE NET======"
@@ -283,17 +283,17 @@ echo "● Selected: Network Mask=$PROXY_NET_MASK"
 HOST_IPV4_ADDR=$(hostname -I | awk '{print $1}')
 echo "● Selected: Host IPv4 address=$HOST_IPV4_ADDR"
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE VAR FILES======"
-echo $PROXY_NETWORK > v_network.txt
-echo $PROXY_COUNT > v_count.txt
-echo $PROXY_NET_MASK > v_netmask.txt
-echo $PROXY_AUTHORISATION > v_authmode.txt
-echo $PROXY_AUTH_IP > v_authip.txt
+echo $PROXY_NETWORK >>~/v_network.txt
+echo $PROXY_COUNT >>~/v_count.txt
+echo $PROXY_NET_MASK >>~/v_netmask.txt
+echo $PROXY_AUTHORISATION >>~/v_authmode.txt
+echo $PROXY_AUTH_IP >>~/v_authip.txt
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE && GEN PROXY======"
@@ -328,7 +328,7 @@ for e in $(cat ~/ip.list); do
     let "CURRENT_PROXY_PORT+=1"
 done
 
-sleep 3
+sleep 1
 
 ####
 echo "======CONFIGURE AUTORUN======"
@@ -356,7 +356,7 @@ exit 0
 END
 /bin/chmod +x /etc/rc.local
 
-sleep 3
+sleep 1
 
 ####
 echo "======REBOOT======"
