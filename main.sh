@@ -251,7 +251,7 @@ if [[ ! "$PROXY_START_PORT" ]]; then
 fi
 echo "● Selected: $PROXY_START_PORT"
 
-sleep 3
+sleep 1
 
 ####
 echo "======SET PROXY COUNT======"
@@ -276,22 +276,28 @@ echo "● Selected: $PROXY_PROTOCOL"
 sleep 1
 
 ####
-echo "======GET SERVER IP && CONFIGURE NET======"
-PROXY_NETWORK=$(echo $PROXY_NETWORK | awk -F:: '{print $1}')
-echo "● Selected: Network=$PROXY_NETWORK"
-echo "● Selected: Network Mask=$PROXY_NET_MASK"
-HOST_IPV4_ADDR=$(hostname -I | awk '{print $1}')
-echo "● Selected: Host IPv4 address=$HOST_IPV4_ADDR"
-
-sleep 1
-
-####
 echo "======CONFIGURE VAR FILES======"
 echo $PROXY_NETWORK >>~/v_network.txt
 echo $PROXY_COUNT >>~/v_count.txt
 echo $PROXY_NET_MASK >>~/v_netmask.txt
 echo $PROXY_AUTHORISATION >>~/v_authmode.txt
 echo $PROXY_AUTH_IP >>~/v_authip.txt
+
+echo "Writing data $PROXY_NETWORK to v_network.txt"
+echo "Writing data $PROXY_COUNT to v_count.txt"
+echo "Writing data $PROXY_NET_MASK to v_netmask.txt"
+echo "Writing data $PROXY_AUTHORISATION to v_authmode.txt"
+echo "Writing data $PROXY_AUTH_IP to v_authip.txt"
+
+sleep 1
+
+####
+echo "======GET SERVER IP && CONFIGURE NET======"
+PROXY_NETWORK=$(echo $PROXY_NETWORK | awk -F:: '{print $1}')
+echo "● Selected: Network=$PROXY_NETWORK"
+echo "● Selected: Network Mask=$PROXY_NET_MASK"
+HOST_IPV4_ADDR=$(hostname -I | awk '{print $1}')
+echo "● Selected: Host IPv4 address=$HOST_IPV4_ADDR"
 
 sleep 1
 
