@@ -42,7 +42,12 @@ sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/avcvv/IPv6ProxyInsta
 -   The ability to connect to ipv6 addresses
     -   Check: `ping6 -c3 google.com &>/dev/null && echo "Connected successfully" || echo "Connection error"`
 
-# Used
+# Use
+
+-   To generate new ipv6 just run rebuild.sh
+-   Add new authorized ip in file v_authip.txt then run rebuild.sh
+
+# Software
 
 -   [3proxy](https://github.com/z3APA3A/3proxy)
 -   [ndppd](https://github.com/DanielAdolfsson/ndppd)
@@ -52,4 +57,4 @@ sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/avcvv/IPv6ProxyInsta
 
 If you have any questions or suggestions, please contact me:
 
--   Email: mail.to.sadzurami@gmail.com
+-   Email:
