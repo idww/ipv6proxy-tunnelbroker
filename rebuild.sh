@@ -10,20 +10,21 @@ rm -rf ip.list
 rm -rf tunnels.txt
 
 PROXY_NETWORK="$(grep -oP '[0-9].*?(?=::)' v_network.txt)" 
-echo "Network = $PROXY_NETWORK"
+echo "● Network = $PROXY_NETWORK"
 PROXY_NET_MASK="$(grep -oP '(?<=::/).*' v_network.txt)"
 #PROXY_NET_MASK="$(cat v_netmask.txt)"
-echo "Netmask = $PROXY_NET_MASK"
+echo "● Netmask = $PROXY_NET_MASK"
 PROXY_COUNT="$(cat v_count.txt)"
-echo "Proxy Count = $PROXY_COUNT"
-PROXY_AUTH_IP="$(cat v_authip.txt)"
-echo "Proxy Authenticated IPs = $PROXY_AUTH_IP"
-
+echo "● Proxy Count = $PROXY_COUNT"
+#PROXY_AUTH_IP="$(cat v_authip.txt)"
+#echo "Proxy Authenticated IPs = $PROXY_AUTH_IP"
 HOST_IPV4_ADDR=$(hostname -I | awk '{print $1}')
-echo "Host IPv4 = $HOST_IPV4_ADDR"
-
+echo "● Host IPv4 = $HOST_IPV4_ADDR"
 PROXY_AUTHORISATION="$(cat v_authmode.txt)"
-#echo "Proxy auth mode = $PROXY_AUTHORISATION"
+echo "● Proxy auth mode = $PROXY_AUTHORISATION"
+
+echo "● Proxy Authenticated IPs:"
+cat ~/v_authip.txt | while read line; do echo $line; done
 
 #### Authorization method
 echo "↓ Proxies authorisation mode 0 or 1 or 2 : (0 = log;pass / 1 = ip / 2 = no auth)"
@@ -96,7 +97,7 @@ END
 gen_conf
 
 #### Select authorization method
-echo "↓ Configuring proxy authorisation"
+echo "●  Configuring proxy authorisation"
 if [[ $PROXY_AUTHORISATION == *"0"* ]]; then
     #gen_logpass
     cat >>~/3proxy/3proxy.cfg <<END
@@ -104,18 +105,18 @@ auth strong
 users ${PROXY_LOGIN}:CL:${PROXY_PASS}
 allow ${PROXY_LOGIN}
 END
-    echo "Chosen auth type: ($PROXY_AUTH_TYPE) proxy credentials:  Login = $PROXY_LOGIN Pass = $PROXY_PASS"
+    echo "↓ Chosen auth type: ($PROXY_AUTH_TYPE) proxy credentials:  Login = $PROXY_LOGIN Pass = $PROXY_PASS"
 elif [[ $PROXY_AUTHORISATION == *"1"* ]]; then
     #gen_auth_ip
     cat >>~/3proxy/3proxy.cfg <<END
 auth iponly
 END
-    echo "Chosen auth type: ($PROXY_AUTH_TYPE) && authorized ip = $PROXY_AUTH_IP"
+    echo "↓ Chosen auth type: ($PROXY_AUTH_TYPE)"
 elif [[ $PROXY_AUTHORISATION == *"2"* ]]; then
     cat >>~/3proxy/3proxy.cfg <<END
 $PROXY_AUTH_TYPE
 END
-    echo "Chosen auth type: ($PROXY_AUTH_TYPE) anyone can access to proxy!"
+    echo "↓ Chosen auth type: ($PROXY_AUTH_TYPE) anyone can access to proxy!"
 else
     echo "● Unsupported auth format: $PROXY_AUTHORISATION"
     exit 1
@@ -172,8 +173,8 @@ for e in $(cat ~/ip.list); do
 done
 
 generate_auth_ip() {
-for e in $(cat ~/v_authip.txt); do
-    echo "$(sed -i "/auth iponly/a allow * $e" ~/3proxy/3proxy.cfg)">>~/3proxy/3proxy.cfg
+for i in $(cat ~/v_authip.txt); do
+    echo "$(sed -i "/auth iponly/a allow * $i" ~/3proxy/3proxy.cfg)">>~/3proxy/3proxy.cfg
 done
 }
 
