@@ -359,6 +359,13 @@ END
 sleep 1
 
 ####
+echo "======CONFIGURE REBUILD SCRIPT======"
+wget https://raw.githubusercontent.com/avcvv/IPv6ProxyInstaller/main/rebuild.sh
+chmod +x rebuild.sh
+
+sleep 1
+
+####
 echo "======REBOOT======"
 echo "● Finishing and rebooting"
 #reboot now
