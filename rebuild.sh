@@ -109,7 +109,6 @@ elif [[ $PROXY_AUTHORISATION == *"1"* ]]; then
     #gen_auth_ip
     cat >>~/3proxy/3proxy.cfg <<END
 auth iponly
-allow * ${PROXY_AUTH_IP}
 END
     echo "Chosen auth type: ($PROXY_AUTH_TYPE) && authorized ip = $PROXY_AUTH_IP"
 elif [[ $PROXY_AUTHORISATION == *"2"* ]]; then
