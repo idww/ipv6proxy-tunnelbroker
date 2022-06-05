@@ -360,6 +360,7 @@ sleep 1
 
 ####
 echo "======CONFIGURE REBUILD SCRIPT======"
+cd ~
 wget https://raw.githubusercontent.com/avcvv/IPv6ProxyInstaller/main/rebuild.sh
 chmod +x rebuild.sh
 
