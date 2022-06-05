@@ -172,6 +172,13 @@ for e in $(cat ~/ip.list); do
     let "CURRENT_PROXY_PORT+=1"
 done
 
+generate_auth_ip() {
+for e in $(cat ~/v_authip.txt); do
+    echo "$(sed -i "/auth iponly/a allow * $e" ~/3proxy/3proxy.cfg)">>~/3proxy/3proxy.cfg
+done
+}
+
+generate_auth_ip
 
 ####
 ~/3proxy/bin/3proxy ~/3proxy/3proxy.cfg
