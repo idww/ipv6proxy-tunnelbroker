@@ -21,7 +21,7 @@ The script establishes 6to4 tunnels. You connect to your server's ipv4 address o
 # Installation
 
 ```
-sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Sadzurami/IPv6ProxyInstaller/main/main.sh)"
+sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/avcvv/IPv6ProxyInstaller/main/main.sh)"
 ```
 
 # How to start
