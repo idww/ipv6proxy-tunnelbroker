@@ -367,7 +367,7 @@ sleep 1
 ####
 echo "======CONFIGURE REBUILD SCRIPT======"
 cd ~
-wget https://raw.githubusercontent.com/idww/IPv6ProxyInstaller/main/rebuild.sh
+wget https://raw.githubusercontent.com/idww/ipv6proxy-tunnelbroker/refs/heads/main/rebuild.sh
 chmod +x rebuild.sh
 
 sleep 1
